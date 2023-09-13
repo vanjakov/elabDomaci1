@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Robotika</title>
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+<main>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#onama">O nama</a></li>
+                <li><a href="#roboti">Roboti</a></li>
+                <li><a href="#poruke">Poruke</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="onama" id="onama">
+        <div class="levo">
+            <h1 class="center">Nesto o nama</h1>
+            <p>Svojim znanjem na polju automatskog upravljanja spremni smo da i vama pomognemo kako bi ste optimalizovali upotrebljivost i ekonomičnost vaših industriskih postrojenja. Poseban akcenat stavljamo na korišćenje flexibilnih sistema automatizacije - robota i modularnih transportnih sistema.Moramo naglasiti da se razvoj i izrada obavljaju “pod istim krovom” uz maksimalan nadzor i garantovan kvalitet. Zajednički cilj naših klijenata i naše firme su optimalna rešenja, bilo da su parcijalna ili kompletna. Zajedno sa njima vrlo efikasno dolazimo do odličnih rezultata.</p>
+            <img src="slike/robot1.png" alt="robot" />
+        </div>
+        <div class="desno">
+            <img src="slike/robot.png" alt="robot" />
+        </div>
+    </section>
+
+    <section id="roboti">
+        <h1 class="center">Roboti</h1>
+        <div  class="roboti">
+
+            <article class="robot center">
+                <h2>Robot kutija</h2>
+                <img src="slike/robotkutija.jpeg" alt="robot kutija">
+                <p>Ovaj robot voli da iskace iz kutije</p>
+            </article>
+
+            <article class="robot center">
+                <h2>Robot slagalica</h2>
+                <img src="slike/robot-slagalica.webp" alt="robot slagalica">
+                <p>Ovaj robot voli da slaze slagalicu</p>
+            </article>
+
+            <article class="robot center">
+                <h2>Robot naucnik</h2>
+                <img src="slike/robot-naucnik.webp" alt="robot naucnik">
+                <p>Ovaj robot voli da cita knjige</p>
+            </article>
+
+            <article class="robot center">
+                <h2>Robot spavalica</h2>
+                <img src="slike/robot-spavalica.jpeg" alt="robot spavalica">
+                <p>Ovaj robot voli da spavaaaa</p>
+            </article>
+
+        </div>
+    </section>
+
+    <section id="poruke">
+        <h1 class="center">Poruke nasih fanova</h1>
+        <div class="poruke">
+
+        </div>
+        <hr>
+        <div class="center">
+            <button class="dugme" onclick="obrisiPoruke()">Obrisi poruke</button>
+        </div>
+    </section>
+
+    <section id="kontakt">
+        <h1 class="center">Kontakt</h1>
+        <form class="center forma" onsubmit="unesiPoruku(event)">
+            <label for="ime">Ime</label>
+            <input type="text" id="ime" required />
+            <label for="poruka">Poruka</label>
+            <textarea rows="10" id="poruka" required></textarea>
+            <button onclick="unesiPoruku()" class="dugme" type="submit">Posalji</button>
+        </form>
+    </section>
+    <footer>
+        <span class="center">&heartsuit; Love us robots &heartsuit; </span>
+    </footer>
+</main>
+
+<script>
+    // on image click play sound
+
+    const roboti = document.querySelectorAll('.robot img');
+
+    roboti.forEach(robot => {
+        robot.addEventListener('click', () => {
+            const audio = new Audio('sound/sound.mp3');
+            audio.currentTime = 0;
+            audio.play();
+            robot.className = 'shake';
+
+            setTimeout(() => {
+                robot.className = '';
+            }, 4000);
+        });
+    });
+
+
+    function obrisiPoruke() {
+        window.sessionStorage.removeItem('poruke');
+        document.querySelector('.poruke').innerHTML = '';
+    }
+
+    function prikaziPoruke() {
+        let poruke = window.sessionStorage.getItem('poruke');
+        if (poruke !== null) {
+            poruke = JSON.parse(poruke);
+            let porukeHtml = poruke.map(poruka => {
+                return `
+                <article class="poruka">
+                    <h3>${poruka.ime}</h3>
+                    <p>${poruka.poruka}</p>
+                </article>
+                `;
+            });
+            document.querySelector('.poruke').innerHTML = porukeHtml.join('');
+        }else{
+            document.querySelector('.poruke').innerHTML = '<h3 class="center">Nema poruka</h3>';
+        }
+    }
+
+    prikaziPoruke();
+
+    function unesiPoruku(event) {
+        event.preventDefault();
+        let ime = document.getElementById('ime').value;
+        let poruka = document.getElementById('poruka').value;
+        let porukaObj = {
+            ime: ime,
+            poruka: poruka
+        };
+        let poruke = window.sessionStorage.getItem('poruke');
+        if (poruke === null) {
+            poruke = [];
+        } else {
+            poruke = JSON.parse(poruke);
+        }
+        poruke.push(porukaObj);
+        window.sessionStorage.setItem('poruke', JSON.stringify(poruke));
+        prikaziPoruke();
+    }
+
+</script>
+
+</body>
+
+</html>
